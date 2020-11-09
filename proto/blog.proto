@@ -1,0 +1,64 @@
+syntax="proto3";
+package blog;
+option go_package= "blogpb";
+
+// Defining out Microservice
+service BlogService{
+    // unary service
+    rpc CreateBlog(CreateBlogReq) returns (CreateBlogRes) {}
+    rpc ReadBlog(ReadBlogReq) returns (ReadBlogRes) {}
+    rpc UpdateBlog(UpdateBlogReq) returns (UpdateBlogRes) {}
+    rpc DeleteBlog(DeleteBlogReq) returns (DeleteBlogRes) {}
+    
+    // server streaming - for one request message the server will send back multiple blog messages.
+    rpc ListBlog(ListBlogReq) returns (ListBlogReq) {}
+}
+
+message Blog {
+    string id = 1;
+    string author_id = 2;
+    string title = 3;
+    string content = 4;
+}
+
+
+// create, read and update will return a blog message
+message CreateBlogReq {
+    Blog blog = 1;      // with blank id , that is to be filled by MongoBD logic
+}
+message CreateBlogRes {
+    Blog blog = 1;      // id will get filled
+}
+
+
+// blog will be searched using an id
+message ReadBlogReq {
+    string id = 1;
+}
+message ReadBlogRes {
+    Blog blog = 1;
+}
+
+
+// same as create, but with id filled already
+message UpdateBlogReq {
+    Blog blog = 1;
+}
+message UpdateBlogRes {
+    Blog blog = 1;
+}
+
+
+message DeleteBlogReq {
+    string id = 1;
+}
+message DeleteBlogRes {
+    bool success = 1;
+}
+
+
+// ListBlogs will use server-streaming
+message ListBlogReq {}
+message ListBlogRes {
+    Blog blog = 1;
+}
